@@ -1,0 +1,82 @@
+html, body { 
+    font-family: 'Inter';
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+}
+
+body, #input {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#input {
+    justify-content: center;
+    padding: 102px 56px;
+    gap: 24px;
+}
+
+#input > .title {
+    font-size: 48px;
+    line-height: normal;
+    margin: 0;
+    border-collapse: collapse;
+    font-weight: 700;
+}
+
+#input > .heading {
+    font-size: 24px;
+}
+
+#input > .load-button {
+    background: linear-gradient(180deg, #E4E4E4 0%, #F7F7F7 100%);
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    opacity: 0.7;
+    padding: 6px 12px;
+}
+
+#input > .error {
+    color: #BF0E0E;
+    font-size: 16px;
+}
+
+#render-area {
+    max-width: 638px;
+}
+
+#render-area > .file-title {
+    font-size: 32px;
+}
+
+.block {
+    display: block;
+}
+
+.block > .block {
+    grid-row-start: 2;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.hidden {
+    display: none!important;
+}
+
+.key {
+    color: #4E9590;
+    border-left: 1px solid #BFBFBF;
+    padding-left: 16px;
+}
+
+#data > .block > .key {
+    border-left: none;
+    padding-left: 0;
+}

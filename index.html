@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>💅 Rinha de Frontend 💅</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💅</text></svg>">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,700">
+        <link rel="stylesheet" href="rinha.css" />
+        <script src="rinha.js"></script>
+    </head>
+    <body onload="init()">
+        <div id="input">
+            <h1 class="title">JSON Tree Viewer</h1>
+            <span class="heading">Simple JSON Viewer that runs completely on-client. No data exchange</span>
+            <input class="hidden" id="json" type="file" />
+            <button class="load-button" onclick="triggerLoadFile()">Load JSON</button>
+            <span class="error invisible" id="invalid-file">Invalid file. Please load a valid JSON file.</span>
+        </div>
+        <div class="hidden" id="render-area">
+            <h2 class="file-title" id="filename"></h2>
+            <pre id="data"></pre>
+        </div>
+    </body>
+</html>
