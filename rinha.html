@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>💅 Rinha de Frontend 💅</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💅</text></svg>">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,700">
+        <style>
+            html, body { 
+                font-family: 'Inter';
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                gap: 0;
+            }
+
+            body, #input {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #input {
+                justify-content: center;
+                padding: 102px 56px;
+                gap: 24px;
+            }
+
+            #input > .title {
+                font-size: 48px;
+                line-height: normal;
+                margin: 0;
+                border-collapse: collapse;
+                font-weight: 700;
+            }
+
+            #input > .heading {
+                font-size: 24px;
+            }
+
+            #input > .load-button {
+                background: linear-gradient(180deg, #E4E4E4 0%, #F7F7F7 100%);
+                border: 1px solid black;
+                border-radius: 5px;
+                font-size: 16px;
+                font-weight: 500;
+                opacity: 0.7;
+                padding: 6px 12px;
+            }
+
+            #input > .error {
+                color: #BF0E0E;
+                font-size: 16px;
+            }
+
+            #render-area {
+                max-width: 638px;
+            }
+
+            #render-area > .file-title {
+                font-size: 32px;
+            }
+
+            .block {
+                display: block;
+            }
+
+            .block > .block {
+                grid-row-start: 2;
+            }
+
+            .invisible {
+                visibility: hidden;
+            }
+
+            .hidden {
+                display: none!important;
+            }
+            
+            .key {
+                color: #4E9590;
+                border-left: 1px solid #BFBFBF;
+                padding-left: 16px;
+            }
+
+            #data > .block > .key {
+                border-left: none;
+                padding-left: 0;
+            }
+        </style>
+        <script src="rinha.js"></script>
+    </head>
+    <body onload="init()">
+        <div id="input">
+            <h1 class="title">JSON Tree Viewer</h1>
+            <span class="heading">Simple JSON Viewer that runs completely on-client. No data exchange</span>
+            <input class="hidden" id="json" type="file" />
+            <button class="load-button" onclick="triggerLoadFile()">Load JSON</button>
+            <span class="error invisible" id="invalid-file">Invalid file. Please load a valid JSON file.</span>
+        </div>
+        <div class="hidden" id="render-area">
+            <h2 class="file-title" id="filename"></h2>
+            <pre id="data"></pre>
+        </div>
+    </body>
+</html>
