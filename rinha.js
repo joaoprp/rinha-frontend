@@ -24,15 +24,15 @@ async function processFile(event) {
     const json = toJSON((await Promise.all(filePromises)).join(''));
 
     if (!!json) {
-        document.getElementById('input').classList.add('hidden');        
-        document.getElementById('data').insertAdjacentHTML('beforeend', renderHTML(json));
+        document.getElementById('input').classList.add('hidden');
+
+        document.getElementById('filename').textContent = file.name;     
+        document.getElementById('data').innerHTML = renderHTML(json);
 
         document.getElementById('render-area').classList.remove('hidden');
     } else {
         document.getElementById('invalid-file').classList.remove('invisible');
     }
-    
-    document.getElementById('filename').textContent = file.name;
 }
 
 function toJSON(jsonString) {
@@ -67,19 +67,23 @@ function renderHTML(obj) {
                     rsqb = '<span class="bracket">]</span>';
                 }
             } else if (typeof el[1] === 'string') {
-                content = `"${el[1]}"`
-                    .replaceAll('&', '&amp;')
-                    .replaceAll('<', '&lt;')
-                    .replaceAll('>', '&gt;')
-                    .replaceAll('"', '&quot;')
-                    .replaceAll("'", '&#039;')
-                    .replaceAll("{", '&lcub;')
-                    .replaceAll("}", '&rcub;')
-                    .replaceAll("[", '&lsqb;')
-                    .replaceAll("]", '&rsqb;');
+                content = `"${el[1]}"`.cleanup();
             }
 
             return `<div class="wrapper"><span class="${key}">${el[0]}: </span>${lsqb} ${content} ${rsqb}</div>`;
         }).join('');
     }
+}
+
+String.prototype.cleanup = function() {
+    return this
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;')
+        .replaceAll("{", '&lcub;')
+        .replaceAll("}", '&rcub;')
+        .replaceAll("[", '&lsqb;')
+        .replaceAll("]", '&rsqb;');
 }
