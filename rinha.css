@@ -1,3 +1,5 @@
+/* Root level styles */
+
 html, body { 
     font-family: 'Inter';
     height: 100%;
@@ -13,18 +15,17 @@ body, #input {
     align-items: center;
 }
 
+/* id level styles */
+
 #input {
     justify-content: center;
     padding: 102px 56px;
     gap: 24px;
 }
 
-#input > .title {
-    font-size: 48px;
-    line-height: normal;
-    margin: 0;
-    border-collapse: collapse;
-    font-weight: 700;
+#input > .error {
+    color: #BF0E0E;
+    font-size: 16px;
 }
 
 #input > .heading {
@@ -41,9 +42,12 @@ body, #input {
     padding: 6px 12px;
 }
 
-#input > .error {
-    color: #BF0E0E;
-    font-size: 16px;
+#input > .title {
+    font-size: 48px;
+    line-height: normal;
+    margin: 0;
+    border-collapse: collapse;
+    font-weight: 700;
 }
 
 #render-area {
@@ -54,29 +58,32 @@ body, #input {
     font-size: 32px;
 }
 
-.block {
-    display: block;
-}
+/* support classes */
 
-.block > .block {
-    grid-row-start: 2;
+.hidden {
+    display: none!important;
 }
 
 .invisible {
     visibility: hidden;
 }
 
-.hidden {
-    display: none!important;
+/* Rendered JSON settings  */
+
+.bracket {
+    color: #F2CAB8;
+}
+
+.index {
+    color: #BFBFBF;
 }
 
 .key {
     color: #4E9590;
-    border-left: 1px solid #BFBFBF;
-    padding-left: 16px;
 }
 
-#data > .block > .key {
-    border-left: none;
-    padding-left: 0;
+.wrapper > .wrapper {
+    border-left: 1px solid #BFBFBF;
+    line-height: 176%;
+    padding-left: 20px;
 }

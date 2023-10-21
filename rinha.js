@@ -1,46 +1,50 @@
-function init() {
-    document.getElementById('json').addEventListener('change', processFile);
-}
+const CHUNK_SIZE = 256 * 1024;
+const init = () => document.getElementById('json').addEventListener('change', processFile);
 
-function isJSON(jsonString) {
-    try {
-        const test = JSON.parse(jsonString);
+async function processFile(event) {
+    const file = event.target.files[0];
+    const sliced = [];
 
-        if (test && typeof test === 'object') {
-            return true;
-        }
-    } catch(_) { }
-
-    return false;
-}
-
-function processContent(evt) {
-    const buffer = evt.target.result;
-    const chunkSize = 16384;
-
-    const view = new Uint8Array(buffer);
-    const decoder = new TextDecoder("utf-8");
-    let jsonString = "";
-    for (let i = 0; i < view.length; i += chunkSize) {
-        const chunk = view.slice(i, i + chunkSize);
-
-        jsonString += decoder.decode(chunk);
+    for (let i = 0; i < file.size; i += CHUNK_SIZE) {
+        sliced.push(file.slice(i, i + CHUNK_SIZE));
     }
 
-    if (isJSON(jsonString)) {
-        document.getElementById('input').classList.add('hidden');
-        document.getElementById('data').innerHTML = syntaxHighlight(jsonString);
+    const filePromises = sliced.map((f) => {
+        return new Promise((resolve, _) => {
+            const reader = new FileReader();
+
+            reader.readAsArrayBuffer(f);
+            reader.onload = function() {
+                const decoder = new TextDecoder('utf-8');
+                resolve(decoder.decode(new Uint8Array(this.result)));
+            }
+        });
+    });
+
+    const json = toJSON((await Promise.all(filePromises)).join(''));
+
+    if (!!json) {
+        document.getElementById('input').classList.add('hidden');        
+        document.getElementById('data').insertAdjacentHTML('beforeend', renderHTML(json));
+
         document.getElementById('render-area').classList.remove('hidden');
     } else {
         document.getElementById('invalid-file').classList.remove('invisible');
     }
+    
+    document.getElementById('filename').textContent = file.name;
 }
 
-function processFile(evt) {
-    const reader = new FileReader();
-    reader.onload = processContent;
-    reader.readAsArrayBuffer(evt.target.files[0]);
-    document.getElementById('filename').textContent = evt.target.files[0].name;
+function toJSON(jsonString) {
+    try {
+        const json = JSON.parse(jsonString);
+
+        if (json && typeof json === 'object') {
+            return json;
+        }
+    } catch(_) { }
+
+    return false;
 }
 
 function triggerLoadFile() {
@@ -48,25 +52,34 @@ function triggerLoadFile() {
     document.getElementById('invalid-file').classList.add('invisible');
 }
 
-function syntaxHighlight(json) {
-    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-        .replace(/{/g, "<span class='block'>").replace(/}/g, '</span>');
-    json = json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, (match) => {
-        var cls = 'number';
-        if (/^"/.test(match)) {
-            if (/:$/.test(match)) {
-                cls = 'key';
-                match = match.replace(/"/g, '');
-            } else {
-                cls = 'string';
-            }
-        } else if (/true|false/.test(match)) {
-            cls = 'boolean';
-        } else if (/null/.test(match)) {
-            cls = 'null';
-        }
-        return '<span class="' + cls + '">' + match + '</span>';
-    });
+function renderHTML(obj) {
+    if (obj && typeof obj === 'object') {
+        return Object.entries(obj).map((el) => {
+            let content = el[1];
+            let lsqb = '';
+            let rsqb = '';
+            const key = Array.isArray(obj) ? 'index' : 'key';
 
-    return json.replace(/,</g, "<br /><");
+            if (el[1] && typeof el[1] === 'object') {
+                content = renderHTML(el[1]);
+                if (el[1].length) {
+                    lsqb = '<span class="bracket">[</span>';
+                    rsqb = '<span class="bracket">]</span>';
+                }
+            } else if (typeof el[1] === 'string') {
+                content = `"${el[1]}"`
+                    .replaceAll('&', '&amp;')
+                    .replaceAll('<', '&lt;')
+                    .replaceAll('>', '&gt;')
+                    .replaceAll('"', '&quot;')
+                    .replaceAll("'", '&#039;')
+                    .replaceAll("{", '&lcub;')
+                    .replaceAll("}", '&rcub;')
+                    .replaceAll("[", '&lsqb;')
+                    .replaceAll("]", '&rsqb;');
+            }
+
+            return `<div class="wrapper"><span class="${key}">${el[0]}: </span>${lsqb} ${content} ${rsqb}</div>`;
+        }).join('');
+    }
 }
